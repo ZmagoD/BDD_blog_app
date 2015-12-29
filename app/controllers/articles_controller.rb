@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :authenticate_user!, expect: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_article, only: [:show, :update, :destroy, :edit]
   def index
     @articles = Article.all
@@ -10,7 +10,7 @@ class ArticlesController < ApplicationController
   end
   
   def create
-    @article = Article.new(article_params)
+    @article = current_user.articles.build(article_params)
     if @article.save
       flash[:success] = "Article has been created!"
       redirect_to articles_path
